@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box"
   config.omnibus.chef_version = :latest
 
-  # Disable automatic box update checking. If you disable this, then
+  # Disable automatic box update checking. If you disable this, then```
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
@@ -42,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "./", "/var/www#{$project}", :mount_options => ['dmode=777,fmode=777']
+  config.vm.synced_folder "./", "/var/www/#{$project}", :mount_options => ['dmode=777,fmode=777']
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -58,6 +58,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # View the documentation for the provider you're using for more
   # information on available options.
+
+  # Enable Berkshelf integration
+  config.berkshelf.enabled = true
 
   # Enable provisioning with CFEngine. CFEngine Community packages are
   # automatically installed. For example, configure the host as a
@@ -89,16 +92,53 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
-  # config.vm.provision "chef_solo" do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
-  #   chef.roles_path = "../my-recipes/roles"
-  #   chef.data_bags_path = "../my-recipes/data_bags"
-  #   chef.add_recipe "mysql"
-  #   chef.add_role "web"
-  #
-  #   # You may also specify custom JSON attributes:
-  #   chef.json = { mysql_password: "foo" }
-  # end
+config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = ["~/.berkshelf/cookbooks", "."]
+    chef.add_recipe :apt
+    chef.add_recipe 'vagrant-chef-skeleton'
+
+    chef.json = {
+      :apache => {
+        :default_site_enabled => "true",
+        :dir                  => "/etc/apache2",
+        :log_dir              => "/var/log/apache2",
+        :error_log            => "error.log",
+        :user                 => "www-data",
+        :group                => "www-data",
+        :binary               => "/usr/sbin/apache2",
+        :cache_dir            => "/var/cache/apache2",
+        :pid_file             => "/var/run/apache2.pid",
+        :lib_dir              => "/usr/lib/apache2",
+        :listen_ports         => [
+          "80"
+        ],
+        :contact              => "ops@example.com",
+        :timeout              => "300",
+        :keepalive            => "On",
+        :keepaliverequests    => "100",
+        :keepalivetimeout     => "5"
+      },
+      :git    => {
+        :prefix => "/usr/local"
+      },
+      :mysql  => {
+        :server_root_password   => "password",
+        :server_repl_password   => "password",
+        :server_debian_password => "password",
+        :service_name           => "mysql",
+        :basedir                => "/usr",
+        :data_dir               => "/var/lib/mysql",
+        :root_group             => "root",
+        :mysqladmin_bin         => "/usr/bin/mysqladmin",
+        :mysql_bin              => "/usr/bin/mysql",
+        :conf_dir               => "/etc/mysql",
+        :confd_dir              => "/etc/mysql/conf.d",
+        :socket                 => "/var/run/mysqld/mysqld.sock",
+        :pid_file               => "/var/run/mysqld/mysqld.pid",
+        :grants_path            => "/etc/mysql/grants.sql"
+      }
+    }
+  end
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
