@@ -1,4 +1,4 @@
-name             'vagrant-chef-skeleton'
+name             'joomla-development'
 maintainer       'Max Eddy'
 license          'MIT'
 description      'Installs/Configures skeleton php development environment'
@@ -12,4 +12,3 @@ depends "nodejs"
 depends "git"
 depends "vim"
 depends "mysql"
-depends "tmux"

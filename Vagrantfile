@@ -3,7 +3,6 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
-$project = File.basename(Dir.getwd)
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
@@ -27,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.12"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -42,7 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "./", "/var/www/#{$project}", :mount_options => ['dmode=777,fmode=777']
+  config.vm.synced_folder "./", "/var/www/joomla", :mount_options => ['dmode=777,fmode=777']
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -95,7 +94,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ["~/.berkshelf/cookbooks", "."]
     chef.add_recipe :apt
-    chef.add_recipe 'vagrant-chef-skeleton'
+    chef.add_recipe 'joomla-development'
 
     chef.json = {
       :apache => {
@@ -112,7 +111,6 @@ config.vm.provision :chef_solo do |chef|
         :listen_ports         => [
           "80"
         ],
-        :contact              => "ops@example.com",
         :timeout              => "300",
         :keepalive            => "On",
         :keepaliverequests    => "100",

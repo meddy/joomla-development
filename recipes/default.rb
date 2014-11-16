@@ -11,4 +11,7 @@ include_recipe 'mysql::server'
 include_recipe 'nodejs'
 include_recipe 'git'
 include_recipe 'vim'
-include_recipe 'tmux'
+
+web_app 'joomla-development' do
+  template 'web_app.conf.erb'
+end

@@ -1,0 +1,3 @@
+[submodule "joomla"]
+	path = joomla
+	url = git@github.com:joomla/joomla-cms.git
