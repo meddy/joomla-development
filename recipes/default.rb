@@ -16,3 +16,10 @@ web_app 'joomla-development' do
   template 'web_app.conf.erb'
   docroot '/var/www/joomla-development/joomla'
 end
+
+include_recipe "database::mysql"
+
+mysql_database 'joomla' do
+  connection ({:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']})
+  action :create
+end
