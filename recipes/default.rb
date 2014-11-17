@@ -14,4 +14,5 @@ include_recipe 'vim'
 
 web_app 'joomla-development' do
   template 'web_app.conf.erb'
+  docroot '/var/www/joomla-development/joomla'
 end
