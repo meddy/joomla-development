@@ -1,7 +1,7 @@
-vagrant-chef-skeleton
+joomla-development
 =====================
 
-A development environment skeleton for a PHP web application.
+A development environment for testing out Joomla
 
 ## Requirements
  - Virtual Box
