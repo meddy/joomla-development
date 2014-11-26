@@ -2,3 +2,6 @@
   path = joomla
   url = git@github.com:joomla/joomla-cms.git
   ignore = dirty
+[submodule "vendor/vagrantfile"]
+	path = vendor/vagrantfile
+	url = git@github.com:daftlabs/vagrantfile.git
